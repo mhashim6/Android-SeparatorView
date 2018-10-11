@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+	<declare-styleable name="SeparatorView" tools:ignore="MissingDefaultResource">
+		<attr name="lineStyle" format="enum">
+			<enum name="solid" value="0"/>
+			<enum name="dashed" value="1"/>
+			<enum name="dotted" value="2"/>
+		</attr>
+		<attr name="lineColor" format="color"/>
+
+		<attr name="dashGap" format="dimension"/>
+		<attr name="dashWidth" format="dimension"/>
+	</declare-styleable>
+
+</resources>
