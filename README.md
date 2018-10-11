@@ -38,6 +38,6 @@ allprojects {
 Add the dependency:
 ```groovy
 dependencies {
-    implementation 'com.github.mhashim6:SeparatorView:1.0'
+    implementation 'com.github.mhashim6:SeparatorView:1.1'
 }
 ```

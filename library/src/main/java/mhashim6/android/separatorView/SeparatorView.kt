@@ -45,6 +45,12 @@ class SeparatorView : View {
             updateDashesStyle()
         }
 
+    var orientation = Orientation.VERTICAL
+        set(value) {
+            field = value
+            invalidate()
+        }
+
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attributeSet: AttributeSet?) : this(context, attributeSet, 0)
     constructor(context: Context, attributeSet: AttributeSet?, defStyleAttr: Int) : super(context, attributeSet, defStyleAttr) {
@@ -59,21 +65,40 @@ class SeparatorView : View {
 
             dashWidth = getDimension(R.styleable.SeparatorView_dashWidth, 15f)
             dashGap = getDimension(R.styleable.SeparatorView_dashGap, 10f)
+
+            orientation = resolveOrientation(getInt(R.styleable.SeparatorView_orientation, 0))
         }
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val desiredHeight = dpToPx(2, context)
-
-        val width = View.MeasureSpec.getSize(widthMeasureSpec)
-        val height = View.resolveSize(desiredHeight, heightMeasureSpec)
-
+        val (width, height) = when (orientation) {
+            Orientation.HORIZONTAL -> onMeasureHorizontal(widthMeasureSpec, heightMeasureSpec)
+            Orientation.VERTICAL -> onMeasureVertical(widthMeasureSpec, heightMeasureSpec)
+        }
         setMeasuredDimension(width, height)
+    }
+
+    private fun onMeasureHorizontal(widthMeasureSpec: Int, heightMeasureSpec: Int): Pair<Int, Int> {
+        val desiredHeight = dpToPx(2, context)
+        return View.MeasureSpec.getSize(widthMeasureSpec) to View.resolveSize(desiredHeight, heightMeasureSpec)
+    }
+
+    private fun onMeasureVertical(widthMeasureSpec: Int, heightMeasureSpec: Int): Pair<Int, Int> {
+        val desiredWidth = dpToPx(2, context)
+        return View.resolveSize(desiredWidth, widthMeasureSpec) to View.MeasureSpec.getSize(heightMeasureSpec)
     }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        canvas.drawLine(0f, 0f, width.toFloat(), 0f, resolvePaint(lineStyle).apply { color = lineColor })
+        var startX = 0f
+        var startY = 0f
+        var stopX = 0f
+        var stopY = 0f
+        when (orientation) {
+            Orientation.HORIZONTAL -> stopX = width.toFloat()
+            Orientation.VERTICAL -> stopY = height.toFloat()
+        }
+        canvas.drawLine(startX, startY, stopX, stopY, resolvePaint(lineStyle).apply { color = lineColor })
     }
 
     private fun updateDashesStyle() {
@@ -94,10 +119,20 @@ class SeparatorView : View {
             DOTTED
         }
 
+        enum class Orientation {
+            HORIZONTAL,
+            VERTICAL
+        }
+
         private fun resolveStyle(index: Int): LineStyle = when (index) {
             1 -> LineStyle.DASHED
             2 -> LineStyle.DOTTED
             else -> LineStyle.SOLID
+        }
+
+        private fun resolveOrientation(index: Int): Orientation = when (index) {
+            1 -> Orientation.VERTICAL
+            else -> Orientation.HORIZONTAL
         }
     }
 }
