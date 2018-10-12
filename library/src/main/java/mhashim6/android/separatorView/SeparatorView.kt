@@ -90,8 +90,8 @@ class SeparatorView : View {
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        var startX = 0f
-        var startY = 0f
+        val startX = 0f
+        val startY = 0f
         var stopX = 0f
         var stopY = 0f
         when (orientation) {
@@ -112,6 +112,17 @@ class SeparatorView : View {
         LineStyle.DOTTED -> dottedLine
     }
 
+    private fun resolveStyle(index: Int): LineStyle = when (index) {
+        1 -> LineStyle.DASHED
+        2 -> LineStyle.DOTTED
+        else -> LineStyle.SOLID
+    }
+
+    private fun resolveOrientation(index: Int): Orientation = when (index) {
+        1 -> Orientation.VERTICAL
+        else -> Orientation.HORIZONTAL
+    }
+
     companion object {
         enum class LineStyle {
             SOLID,
@@ -122,17 +133,6 @@ class SeparatorView : View {
         enum class Orientation {
             HORIZONTAL,
             VERTICAL
-        }
-
-        private fun resolveStyle(index: Int): LineStyle = when (index) {
-            1 -> LineStyle.DASHED
-            2 -> LineStyle.DOTTED
-            else -> LineStyle.SOLID
-        }
-
-        private fun resolveOrientation(index: Int): Orientation = when (index) {
-            1 -> Orientation.VERTICAL
-            else -> Orientation.HORIZONTAL
         }
     }
 }
